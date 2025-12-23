@@ -17,53 +17,6 @@ const updateMusicButton = () => {
     }
 };
 
-// Опит за автоматично стартиране при зареждане
-window.addEventListener('DOMContentLoaded', () => {
-    console.log('🔧 Инициализиране на музиката...');
-
-    // Задаване на volume
-    backgroundMusic.volume = 0.5;
-
-    // Убедете се, че е muted
-    backgroundMusic.muted = true;
-
-    // Множество опити за autoplay
-    const attemptAutoplay = () => {
-        const playPromise = backgroundMusic.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log('🎵 Музиката стартира автоматично (muted)');
-                updateMusicButton();
-
-                // Добавяне на визуална индикация за unmute
-                musicToggle.style.animation = 'bounce 1s ease infinite';
-            }).catch((error) => {
-                console.log('⚠️ Autoplay блокирано:', error.message);
-                console.log('Опит повторно след 100ms...');
-
-                // Опит отново след малко
-                setTimeout(() => {
-                    backgroundMusic.play().then(() => {
-                        console.log('✅ Музиката стартира след повторен опит');
-                        updateMusicButton();
-                        musicToggle.style.animation = 'bounce 1s ease infinite';
-                    }).catch(err => {
-                        console.log('❌ Не може да стартира autoplay. Чакам потребителско взаимодействие.');
-                        musicToggle.style.animation = 'bounce 1s ease infinite';
-                    });
-                }, 100);
-            });
-        }
-    };
-
-    attemptAutoplay();
-
-    // Конфети ефект при зареждане
-    setTimeout(() => {
-        createConfetti();
-    }, 500);
-});
 
 // Проверка на състоянието на музиката
 backgroundMusic.addEventListener('volumechange', updateMusicButton);
