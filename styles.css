@@ -264,6 +264,49 @@ body {
     }
 }
 
+/* Контрол за музика */
+.music-control {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.9);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    font-size: 2em;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-control:hover {
+    transform: scale(1.1);
+    background: rgba(255, 215, 0, 1);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+}
+
+.music-control:active {
+    transform: scale(0.95);
+}
+
+.music-control.playing {
+    animation: musicPulse 1s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(255, 215, 0, 0.8);
+    }
+}
+
 /* JavaScript динамични ефекти */
 
 /* Конфети */

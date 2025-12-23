@@ -1,10 +1,66 @@
 // Динамични ефекти за коледната картичка
 
-// Конфети ефект при зареждане
+// Управление на фоновата музика
+const backgroundMusic = document.getElementById('background-music');
+const musicToggle = document.getElementById('music-toggle');
+let musicStarted = false;
+
+// Опит за автоматично стартиране при зареждане
 window.addEventListener('load', () => {
+    // Опит за автоматично възпроизвеждане
+    const playPromise = backgroundMusic.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            // Автоматичното възпроизвеждане успя
+            musicStarted = true;
+            musicToggle.textContent = '🔊';
+            musicToggle.classList.add('playing');
+        }).catch(() => {
+            // Браузърът блокира автоматичното възпроизвеждане
+            // Ще се стартира при първо кликване
+            musicToggle.textContent = '🔇';
+        });
+    }
+
+    // Конфети ефект при зареждане
     setTimeout(() => {
         createConfetti();
     }, 500);
+});
+
+// Стартиране на музиката при първо взаимодействие
+const startMusicOnInteraction = () => {
+    if (!musicStarted) {
+        backgroundMusic.play().then(() => {
+            musicStarted = true;
+            musicToggle.textContent = '🔊';
+            musicToggle.classList.add('playing');
+        }).catch(err => {
+            console.log('Не може да се стартира музиката:', err);
+        });
+    }
+};
+
+// Стартиране при първо кликване навсякъде
+document.body.addEventListener('click', startMusicOnInteraction, { once: true });
+document.body.addEventListener('touchstart', startMusicOnInteraction, { once: true });
+
+// Бутон за включване/изключване на музиката
+musicToggle.addEventListener('click', (e) => {
+    e.stopPropagation(); // Предотвратява активирането на body listener
+
+    if (backgroundMusic.paused) {
+        backgroundMusic.play().then(() => {
+            musicToggle.textContent = '🔊';
+            musicToggle.classList.add('playing');
+            musicStarted = true;
+        });
+    } else {
+        backgroundMusic.pause();
+        musicToggle.textContent = '🔇';
+        musicToggle.classList.remove('playing');
+    }
 });
 
 // Създаване на конфети
