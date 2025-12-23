@@ -1,2 +1,2 @@
 # ChristmasGiftCard
-Simple static gift car 
+Simple static web page - gift car 
