@@ -8,37 +8,56 @@ let soundUnmuted = false;
 // Функция за актуализиране на бутона
 const updateMusicButton = () => {
     if (backgroundMusic.muted) {
-        musicToggle.textContent = '🔇';
+        musicToggle.textContent = '🔊';
         musicToggle.classList.remove('playing');
     } else {
-        musicToggle.textContent = '🔊';
+        musicToggle.textContent = '🔇';
         musicToggle.classList.add('playing');
         soundUnmuted = true;
     }
 };
 
 // Опит за автоматично стартиране при зареждане
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('🔧 Инициализиране на музиката...');
+
     // Задаване на volume
     backgroundMusic.volume = 0.5;
 
-    // Проверка дали аудиото свири
-    const playPromise = backgroundMusic.play();
+    // Убедете се, че е muted
+    backgroundMusic.muted = true;
 
-    if (playPromise !== undefined) {
-        playPromise.then(() => {
-            console.log('🎵 Музиката стартира автоматично (muted)');
-            updateMusicButton();
+    // Множество опити за autoplay
+    const attemptAutoplay = () => {
+        const playPromise = backgroundMusic.play();
 
-            // Добавяне на визуална индикация за unmute
-            if (backgroundMusic.muted) {
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('🎵 Музиката стартира автоматично (muted)');
+                updateMusicButton();
+
+                // Добавяне на визуална индикация за unmute
                 musicToggle.style.animation = 'bounce 1s ease infinite';
-            }
-        }).catch((error) => {
-            console.log('⚠️ Autoplay блокирано:', error);
-            musicToggle.style.animation = 'bounce 1s ease infinite';
-        });
-    }
+            }).catch((error) => {
+                console.log('⚠️ Autoplay блокирано:', error.message);
+                console.log('Опит повторно след 100ms...');
+
+                // Опит отново след малко
+                setTimeout(() => {
+                    backgroundMusic.play().then(() => {
+                        console.log('✅ Музиката стартира след повторен опит');
+                        updateMusicButton();
+                        musicToggle.style.animation = 'bounce 1s ease infinite';
+                    }).catch(err => {
+                        console.log('❌ Не може да стартира autoplay. Чакам потребителско взаимодействие.');
+                        musicToggle.style.animation = 'bounce 1s ease infinite';
+                    });
+                }, 100);
+            });
+        }
+    };
+
+    attemptAutoplay();
 
     // Конфети ефект при зареждане
     setTimeout(() => {
