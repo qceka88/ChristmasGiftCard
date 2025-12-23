@@ -1,53 +1,53 @@
-// Динамични ефекти за коледната картичка
+// Dynamic effects for Christmas card
 
-// Управление на фоновата музика
+// Background music management
 const backgroundMusic = document.getElementById('background-music');
 const musicToggle = document.getElementById('music-toggle');
-let soundUnmuted = false;
+const musicOverlay = document.getElementById('music-start-overlay');
 
-// Функция за актуализиране на бутона
+// Music start overlay handler
+if (musicOverlay) {
+    musicOverlay.addEventListener('click', () => {
+        // Start the music
+        backgroundMusic.muted = false;
+        backgroundMusic.play().then(() => {
+            console.log('🎵 Music started!');
+            updateMusicButton();
+            // Hide overlay with animation
+            musicOverlay.classList.add('hidden');
+            setTimeout(() => {
+                musicOverlay.style.display = 'none';
+            }, 500);
+        }).catch((error) => {
+            console.log('⚠️ Error starting music:', error);
+        });
+    });
+}
+
+// Function to update music button
 const updateMusicButton = () => {
-    if (backgroundMusic.muted) {
+    if (backgroundMusic.paused) {
         musicToggle.textContent = '🔊';
         musicToggle.classList.remove('playing');
     } else {
         musicToggle.textContent = '🔇';
         musicToggle.classList.add('playing');
-        soundUnmuted = true;
     }
 };
 
-
-// Проверка на състоянието на музиката
-backgroundMusic.addEventListener('volumechange', updateMusicButton);
-
-// Unmute музиката при първо взаимодействие
-const unmuteMusicOnInteraction = () => {
-    if (!soundUnmuted && backgroundMusic.muted) {
-        backgroundMusic.muted = false;
-        console.log('🎵 Звукът е включен!');
-        updateMusicButton();
-        musicToggle.style.animation = '';
+// Music play/pause button
+musicToggle.addEventListener('click', () => {
+    if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        console.log('🔊 Music playing');
+    } else {
+        backgroundMusic.pause();
+        console.log('🔇 Music paused');
     }
-};
-
-// Unmute при първо кликване/движение навсякъде
-document.addEventListener('click', unmuteMusicOnInteraction, { once: true });
-document.addEventListener('touchstart', unmuteMusicOnInteraction, { once: true });
-document.addEventListener('keydown', unmuteMusicOnInteraction, { once: true });
-
-// Бутон за mute/unmute на музиката
-musicToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    musicToggle.style.animation = ''; // Спиране на bounce анимацията
-
-    backgroundMusic.muted = !backgroundMusic.muted;
     updateMusicButton();
-
-    console.log(backgroundMusic.muted ? '🔇 Звукът е изключен' : '🔊 Звукът е включен');
 });
 
-// Създаване на конфети
+// Create confetti
 function createConfetti() {
     const colors = ['#ff6b6b', '#4ecdc4', '#FFD700', '#ff9ff3', '#54a0ff'];
     const confettiCount = 50;
@@ -61,14 +61,14 @@ function createConfetti() {
         confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
         document.body.appendChild(confetti);
 
-        // Премахване след анимацията
+        // Remove after animation
         setTimeout(() => {
             confetti.remove();
         }, 5000);
     }
 }
 
-// Интерактивност на делфинчето
+// Dolphin interactivity
 const dolphin = document.querySelector('.dolphin');
 if (dolphin) {
     dolphin.addEventListener('click', () => {
@@ -77,7 +77,7 @@ if (dolphin) {
             dolphin.style.animation = 'jump 1s ease-out, float 3s ease-in-out infinite';
         }, 10);
 
-        // Създаване на сърца
+        // Create hearts
         createHearts(dolphin);
     });
 
@@ -91,7 +91,7 @@ if (dolphin) {
     });
 }
 
-// Интерактивност на коледното дърво
+// Christmas tree interactivity
 const tree = document.querySelector('.christmas-tree');
 if (tree) {
     tree.addEventListener('click', () => {
@@ -109,7 +109,7 @@ if (tree) {
     });
 }
 
-// Създаване на сърца
+// Create hearts
 function createHearts(element) {
     const hearts = ['❤️', '💙', '💚', '💛', '💜'];
     const rect = element.getBoundingClientRect();
@@ -129,7 +129,7 @@ function createHearts(element) {
     }
 }
 
-// Създаване на искри
+// Create sparkles
 function createSparkles(element) {
     const rect = element.getBoundingClientRect();
     const sparkleCount = 20;
@@ -155,7 +155,7 @@ function createSparkles(element) {
     }
 }
 
-// Анимация на дървото
+// Tree animation
 function playTreeAnimation() {
     const tree = document.querySelector('.christmas-tree');
     tree.style.animation = 'none';
@@ -164,7 +164,7 @@ function playTreeAnimation() {
     }, 10);
 }
 
-// Паралакс ефект за декорациите
+// Parallax effect for decorations
 document.addEventListener('mousemove', (e) => {
     const decorations = document.querySelectorAll('.decoration');
     const mouseX = e.clientX / window.innerWidth;
@@ -179,7 +179,7 @@ document.addEventListener('mousemove', (e) => {
     });
 });
 
-// Промяна на цвета на снежинките при преминаване
+// Snowflake color change
 const snowflakes = document.querySelectorAll('.snowflake');
 snowflakes.forEach(snowflake => {
     setInterval(() => {
@@ -188,7 +188,7 @@ snowflakes.forEach(snowflake => {
     }, 3000);
 });
 
-// Интерактивност на поздрава
+// Greeting interactivity
 const wish = document.querySelector('.wish');
 if (wish) {
     wish.addEventListener('click', () => {
@@ -200,7 +200,7 @@ if (wish) {
     });
 }
 
-// Искрящ курсор
+// Sparkling cursor
 document.addEventListener('mousemove', (e) => {
     if (Math.random() > 0.9) {
         const sparkle = document.createElement('div');
@@ -216,26 +216,26 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// Звукови ефекти (опционално - можеш да добавиш звуци)
+// Sound effects (optional - you can add sounds)
 const playSound = (type) => {
-    // Placeholder за бъдещи звукови ефекти
+    // Placeholder for future sound effects
     console.log(`Playing ${type} sound`);
 };
 
-// Добавяне на магически ефект при скролиране
+// Magic effect on scroll
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
 
     if (currentScroll > lastScroll) {
-        // Скролване надолу
+        // Scrolling down
         document.body.style.filter = `hue-rotate(${currentScroll}deg)`;
     }
 
     lastScroll = currentScroll;
 });
 
-// Специален ефект в полунощ (ако е 00:00)
+// Special midnight effect (if it's 00:00)
 function checkMidnight() {
     const now = new Date();
     if (now.getHours() === 0 && now.getMinutes() === 0) {
@@ -244,24 +244,24 @@ function checkMidnight() {
 }
 
 function createMidnightMagic() {
-    // Масивно конфети и фойерверки
+    // Massive confetti and fireworks
     for (let i = 0; i < 5; i++) {
         setTimeout(() => {
             createConfetti();
         }, i * 300);
     }
 
-    // Промяна на текста
+    // Change text
     const wish = document.querySelector('.wish');
     if (wish) {
         wish.innerHTML = '🎆 ЧЕСТИТА НОВА ГОДИНА! 🎆';
     }
 }
 
-// Проверка всяка минута
+// Check every minute
 setInterval(checkMidnight, 60000);
 
-// Защитен режим срещу скука - промяна на фона на всеки 30 секунди
+// Anti-boredom mode - change background every 30 seconds
 let bgIndex = 0;
 const backgrounds = [
     'linear-gradient(to bottom, #0f2027, #203a43, #2c5364)',
@@ -276,7 +276,7 @@ setInterval(() => {
     document.body.style.transition = 'background 2s ease-in-out';
 }, 30000);
 
-console.log('🎄 Коледна магия активирана! 🎄');
-console.log('💡 Кликни на делфинчето за сърца!');
-console.log('💡 Кликни на дървото за искри!');
-console.log('💡 Кликни на поздрава за конфети!');
+console.log('🎄 Christmas magic activated! 🎄');
+console.log('💡 Click the dolphin for hearts!');
+console.log('💡 Click the tree for sparkles!');
+console.log('💡 Click the greeting for confetti!');

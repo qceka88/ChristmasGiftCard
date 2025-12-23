@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Странични декорации -->
+    <!-- Side decorations -->
     <div class="decoration decoration-left">
         <img src="media/images/root_with_ball.png" alt="Коледна декорация">
     </div>
@@ -16,22 +16,22 @@
         <img src="media/images/root_with_ball.png" alt="Коледна декорация">
     </div>
 
-    <!-- Hero Header с делфинчето -->
+    <!-- Hero header with dolphin -->
     <header class="hero-header">
         <div class="dolphin-container">
             <img src="media/images/dolphin.png" alt="Делфинче" class="dolphin">
         </div>
     </header>
 
-    <!-- Основно съдържание -->
+    <!-- Main content -->
     <main class="main-content">
         <div class="card">
-            <!-- Коледно дърво -->
+            <!-- Christmas tree -->
             <div class="tree-container">
                 <img src="media/images/chrismas_tree.png" alt="Коледно дърво" class="christmas-tree">
             </div>
 
-            <!-- Поздрав -->
+            <!-- Greeting -->
             <div class="greeting">
                 <h1 class="title">За всички Делфинчета,<br>настоящи и бивши!</h1>
 
@@ -44,7 +44,7 @@
         </div>
     </main>
 
-    <!-- Снежинки анимация -->
+    <!-- Snowflakes animation -->
     <div class="snowflakes" aria-hidden="true">
         <div class="snowflake">❅</div>
         <div class="snowflake">❆</div>
@@ -58,17 +58,25 @@
         <div class="snowflake">❆</div>
     </div>
 
-    <!-- Аудио фон -->
-    <audio id="background-music" autoplay loop>
+    <!-- Background audio -->
+    <audio id="background-music" autoplay loop muted>
         <source src="media/audio/audio-file.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Контрол за музика -->
+    <!-- Music control -->
     <button id="music-toggle" class="music-control" title="Включи/Изключи музиката">
         🔊
     </button>
 
-    <!-- JavaScript за динамични ефекти -->
+    <!-- Music start overlay -->
+    <div id="music-start-overlay" class="music-overlay">
+        <div class="music-overlay-content">
+            <div class="music-overlay-icon">🎅</div>
+            <h2 class="music-overlay-title">Натисни за коледна магия.</h2>
+        </div>
+    </div>
+
+    <!-- JavaScript for dynamic effects -->
     <script src="script.js"></script>
 </body>
 </html>
