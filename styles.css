@@ -307,6 +307,15 @@ body {
     }
 }
 
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-10px) scale(1.1);
+    }
+}
+
 /* JavaScript динамични ефекти */
 
 /* Конфети */

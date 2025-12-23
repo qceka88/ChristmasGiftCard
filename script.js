@@ -3,23 +3,40 @@
 // Управление на фоновата музика
 const backgroundMusic = document.getElementById('background-music');
 const musicToggle = document.getElementById('music-toggle');
-let musicStarted = false;
+let soundUnmuted = false;
+
+// Функция за актуализиране на бутона
+const updateMusicButton = () => {
+    if (backgroundMusic.muted) {
+        musicToggle.textContent = '🔇';
+        musicToggle.classList.remove('playing');
+    } else {
+        musicToggle.textContent = '🔊';
+        musicToggle.classList.add('playing');
+        soundUnmuted = true;
+    }
+};
 
 // Опит за автоматично стартиране при зареждане
 window.addEventListener('load', () => {
-    // Опит за автоматично възпроизвеждане
+    // Задаване на volume
+    backgroundMusic.volume = 0.5;
+
+    // Проверка дали аудиото свири
     const playPromise = backgroundMusic.play();
 
     if (playPromise !== undefined) {
         playPromise.then(() => {
-            // Автоматичното възпроизвеждане успя
-            musicStarted = true;
-            musicToggle.textContent = '🔊';
-            musicToggle.classList.add('playing');
-        }).catch(() => {
-            // Браузърът блокира автоматичното възпроизвеждане
-            // Ще се стартира при първо кликване
-            musicToggle.textContent = '🔇';
+            console.log('🎵 Музиката стартира автоматично (muted)');
+            updateMusicButton();
+
+            // Добавяне на визуална индикация за unmute
+            if (backgroundMusic.muted) {
+                musicToggle.style.animation = 'bounce 1s ease infinite';
+            }
+        }).catch((error) => {
+            console.log('⚠️ Autoplay блокирано:', error);
+            musicToggle.style.animation = 'bounce 1s ease infinite';
         });
     }
 
@@ -29,38 +46,33 @@ window.addEventListener('load', () => {
     }, 500);
 });
 
-// Стартиране на музиката при първо взаимодействие
-const startMusicOnInteraction = () => {
-    if (!musicStarted) {
-        backgroundMusic.play().then(() => {
-            musicStarted = true;
-            musicToggle.textContent = '🔊';
-            musicToggle.classList.add('playing');
-        }).catch(err => {
-            console.log('Не може да се стартира музиката:', err);
-        });
+// Проверка на състоянието на музиката
+backgroundMusic.addEventListener('volumechange', updateMusicButton);
+
+// Unmute музиката при първо взаимодействие
+const unmuteMusicOnInteraction = () => {
+    if (!soundUnmuted && backgroundMusic.muted) {
+        backgroundMusic.muted = false;
+        console.log('🎵 Звукът е включен!');
+        updateMusicButton();
+        musicToggle.style.animation = '';
     }
 };
 
-// Стартиране при първо кликване навсякъде
-document.body.addEventListener('click', startMusicOnInteraction, { once: true });
-document.body.addEventListener('touchstart', startMusicOnInteraction, { once: true });
+// Unmute при първо кликване/движение навсякъде
+document.addEventListener('click', unmuteMusicOnInteraction, { once: true });
+document.addEventListener('touchstart', unmuteMusicOnInteraction, { once: true });
+document.addEventListener('keydown', unmuteMusicOnInteraction, { once: true });
 
-// Бутон за включване/изключване на музиката
+// Бутон за mute/unmute на музиката
 musicToggle.addEventListener('click', (e) => {
-    e.stopPropagation(); // Предотвратява активирането на body listener
+    e.stopPropagation();
+    musicToggle.style.animation = ''; // Спиране на bounce анимацията
 
-    if (backgroundMusic.paused) {
-        backgroundMusic.play().then(() => {
-            musicToggle.textContent = '🔊';
-            musicToggle.classList.add('playing');
-            musicStarted = true;
-        });
-    } else {
-        backgroundMusic.pause();
-        musicToggle.textContent = '🔇';
-        musicToggle.classList.remove('playing');
-    }
+    backgroundMusic.muted = !backgroundMusic.muted;
+    updateMusicButton();
+
+    console.log(backgroundMusic.muted ? '🔇 Звукът е изключен' : '🔊 Звукът е включен');
 });
 
 // Създаване на конфети
